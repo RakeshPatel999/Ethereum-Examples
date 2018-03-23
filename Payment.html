@@ -1,0 +1,170 @@
+<html>
+	<head>
+		<title>solidity demo</title>
+		<script type="text/javascript" src="web3/dist/web3.min.js"></script>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+		<!-- jQuery library -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+		<!-- Latest compiled JavaScript -->
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+		<style type="text/css">
+			.md-input {
+			    position: relative;
+			    margin-bottom: 30px;
+			}
+			    .md-input .md-form-control {
+			        font-size: 16px;
+			        padding: 10px 10px 10px 5px;
+			        display: block;
+			        border: none;
+			        border-bottom: 2px solid #CACACA;
+			        box-shadow: none;
+			        width: 100%;
+			    }
+
+			    .md-input label {
+			        color: rgba(0, 0, 0, 0.5);
+			        font-size: 16px;
+			        font-weight: normal;
+			        position: absolute;
+			        pointer-events: none;
+			        left: 5px;
+			        top: -16px;
+			        transition: 0.2s ease all;
+			        -moz-transition: 0.2s ease all;
+			        -webkit-transition: 0.2s ease all;
+			    }
+
+			    .md-input .bar:before {
+			        left: 50%;
+			    }
+
+			    .md-input .bar:after {
+			        right: 50%;
+			    }
+
+			    .md-input .highlight {
+			        position: absolute;
+			        height: 60%;
+			        width: 100px;
+			        top: 25%;
+			        left: 0;
+			        pointer-events: none;
+			        opacity: 0.5;
+			    }
+			    .md-input .md-form-control:focus ~ label, .md-input .md-form-control:valid ~ label {
+			    top: -15px;
+			    font-size: 14px;
+			    color: #183D5D;
+			}
+			.md-input .bar:before, .md-input .bar:after {
+			    content: '';
+			    height: 2px;
+			    width: 0;
+			    bottom: 0px;
+			    position: absolute;
+			    background: #03A9F4;
+			    transition: 0.2s ease all;
+			    -moz-transition: 0.2s ease all;
+			    -webkit-transition: 0.2s ease all;
+			}
+
+			.md-input .md-form-control:focus ~ .bar:before, .md-input .md-form-control:focus ~ .bar:after {
+			    width: 50%;
+			}
+			td, th {
+			    padding: 12px;
+			    border: 1px solid;
+			}
+		</style>
+	</head>
+	<body>
+
+		<div class="container">
+			<div class="row">
+				<div class="col-md-6">
+		    	 <div class="pad15"><br>
+                    <div class="md-input">
+                        <input class="md-form-control" required="" id="from" type="text">
+                        <span class="highlight"></span>
+                        <span class="bar"></span>
+                        <label>From</label>
+                    </div>
+                        <div class="md-input">
+                        <input class="md-form-control" required="" id="to" type="text">
+                        <span class="highlight"></span>
+                        <span class="bar"></span>
+                        <label>To</label>
+                    </div>
+						<div class="md-input">
+                        <input class="md-form-control" required="" id="amount" type="text">
+                        <span class="highlight"></span>
+                        <span class="bar"></span>
+                        <label>Amount</label>
+                    </div>
+				</div>
+			</div>
+			<div class="col-md-6">
+    			<br><br><br><br><br>
+				<center><h2 style="color:green;"></h2></center>		
+			</div>
+		</div>
+
+		<button type="button" id="btn" class="btn btn-primary">Send</button>
+		<br><br>
+		
+		<table style="display: none;border: 1px solid;padding: 5px;">
+			<tr>
+				<th>From</th>
+				<th>To</th>
+				<th>Amount</th>
+				<th>My Balance</th>
+				<th>Reciever Balance</th>
+			</tr>
+		</table>
+		
+		<script type="text/javascript">
+			var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
+
+			web3.eth.defaultAccount = web3.eth.accounts[0];	
+				
+			
+			jQuery('#btn').click(function(){
+
+				var from = jQuery('#from').val();
+				var to = jQuery('#to').val();
+				var amount = jQuery('#amount').val();
+
+				web3.eth.sendTransaction({ 
+					from: from,
+					to: to,
+        			value: web3.toWei(amount, 'ether')
+        		},
+				function(err, transactionHash) {
+				  if (!err){
+				  	jQuery('table').show();
+
+					var fromBalance = web3.eth.getBalance(from);
+					var toBalance = web3.eth.getBalance(to);
+
+					//console.log("From : "+ fromBalance);
+					//console.log("To : "+ toBalance);
+
+				     jQuery('h2').html("Sent Successfully!!!");
+				     jQuery('table').append("<tr><td>"+from+"</td><td>"+to+"</td><td>"+amount+"</td><td>"+fromBalance+"</td><td>"+toBalance+"</td></tr>");
+				  }else{
+				  	jQuery('h2').html("Sent Successfully!!!");
+				  	jQuery('h2').css("color","red");
+				  }
+				});
+
+			});
+	            
+			
+		</script>
+	</body>
+</html>
+
